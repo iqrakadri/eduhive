@@ -130,3 +130,5 @@ html {
   offset-path: rect(0 auto auto 0 round 100px);
   animation: border-beam 4s linear infinite;
 }
+.custom-scrollbar::-webkit-scrollbar { width: 5px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }

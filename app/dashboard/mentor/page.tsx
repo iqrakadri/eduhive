@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaTree, FaSignOutAlt, FaRocket } from "react-icons/fa";
+import { FaTree, FaRocket, FaSignOutAlt } from "react-icons/fa";
 import { auth } from "@/firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -11,18 +11,26 @@ export default function StudentDashboard() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await signOut(auth);
-    toast.success("See you soon!");
-    router.push("/");
+    try {
+      await signOut(auth);
+      toast.success("See you soon, Scholar!");
+      router.push("/");
+    } catch (error) {
+      toast.error("Logout failed");
+    }
   };
 
   return (
-    <main className="min-h-screen bg-[#FFF8F0] text-[#1A0A2E] font-sans overflow-x-hidden">
+    <main className="min-h-screen bg-[#FFFBF7] text-[#1A0A2E] font-sans selection:bg-orange-100 overflow-x-hidden">
       <Toaster position="top-right" />
       
-      {/* ─── TOP TICKER ─── */}
-      <div className="h-9 bg-[#1A0A2E] w-full flex items-center overflow-hidden">
-        <div className="whitespace-nowrap flex gap-12 text-[10px] font-black uppercase tracking-[0.2em] text-white/80 px-4">
+      {/* ─── LIVE STATUS TICKER (Top Bar) ─── */}
+      <div className="fixed top-0 left-0 right-0 h-9 bg-[#1A0A2E] z-[60] flex items-center overflow-hidden">
+        <motion.div 
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          className="whitespace-nowrap flex gap-12 text-[10px] font-black uppercase tracking-[0.2em] text-white/90"
+        >
           <span>🔥 Next Live Session: UI/UX Masterclass in 12m</span>
           <span>•</span>
           <span>🧠 Quiz Alert: "Next.js 15" challenge is now active</span>
@@ -30,13 +38,17 @@ export default function StudentDashboard() {
           <span>🌳 Reward: @Iqra just grew their digital oak to stage 4</span>
           <span>•</span>
           <span>🍯 1.2k Scholars earning XP right now</span>
-        </div>
+          {/* Duplicates for seamless loop */}
+          <span>🔥 Next Live Session: UI/UX Masterclass in 12m</span>
+          <span>•</span>
+          <span>🧠 Quiz Alert: "Next.js 15" challenge is now active</span>
+        </motion.div>
       </div>
 
-      {/* ─── NAVBAR ─── */}
-      <nav className="flex justify-between items-center px-12 py-8 bg-transparent">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white shadow-lg rotate-12">🍯</div>
+      {/* ─── NAVIGATION ─── */}
+      <nav className="fixed top-9 left-0 right-0 flex justify-between items-center px-12 py-7 bg-white/40 backdrop-blur-xl z-50 border-b border-orange-50/50">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
+          <div className="w-8 h-8 bg-orange-500 rounded-lg rotate-12 flex items-center justify-center text-white text-lg shadow-lg">🍯</div>
           <h1 className="text-2xl font-black tracking-tighter">EduHive<span className="text-orange-500">.</span></h1>
         </div>
 
@@ -49,34 +61,35 @@ export default function StudentDashboard() {
           </div>
           <button 
             onClick={handleLogout}
-            className="bg-black text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-xl active:scale-95"
+            className="bg-black text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-xl active:scale-95 flex items-center gap-2"
           >
-            Logout
+            Logout <FaSignOutAlt className="text-[8px]" />
           </button>
         </div>
       </nav>
 
-      {/* ─── HERO SECTION ─── */}
-      <section className="max-w-7xl mx-auto px-12 pt-20 pb-32 flex flex-col md:flex-row items-center justify-between gap-12">
+      {/* ─── HERO CONTENT ─── */}
+      <section className="relative pt-56 pb-32 px-12 max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16">
         
+        {/* Left Text Content */}
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 mb-8">
-            <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600/60">Learn. Quiz. Earn Rewards.</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 border border-orange-100 mb-10">
+            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+            <span className="text-[10px] font-black uppercase tracking-[0.1em] text-orange-600">Learn. Quiz. Earn Rewards.</span>
           </div>
 
-          <h1 className="text-[120px] font-black leading-[0.8] tracking-tighter mb-10">
+          <h1 className="text-[100px] md:text-[120px] font-black leading-[0.82] tracking-tighter mb-10 text-[#1A0A2E]">
             Gamified <br />
             <span className="text-orange-500">Learning.</span> <br />
-            <span className="bg-gradient-to-r from-orange-400 to-pink-500 bg-clip-text text-transparent">Reimagined.</span>
+            <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent italic">Reimagined.</span>
           </h1>
 
           <p className="text-lg text-gray-500/80 mb-12 max-w-lg leading-relaxed font-medium">
-            The world's first peer-learning node where completing quizzes 
-            grows your digital forest and unlocks 1-on-1 sessions with top mentors.
+            The world's first peer-learning node where completing quizzes grows 
+            your digital forest and unlocks 1-on-1 sessions with top mentors.
           </p>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <button 
               onClick={() => router.push('/quizzes')}
               className="px-10 py-5 bg-[#1A0A2E] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] flex items-center gap-3 shadow-2xl hover:bg-black transition-all hover:scale-105"
@@ -93,18 +106,19 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* ─── FLOATING STATUS CARD ─── */}
+        {/* Right Status Card (Exactly as in image) */}
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="relative w-full max-w-[420px]"
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative w-full max-w-[440px]"
         >
-          {/* Background Glow */}
-          <div className="absolute inset-0 bg-orange-500/10 blur-[100px] rounded-full"></div>
+          {/* Subtle Background Glow */}
+          <div className="absolute -inset-4 bg-orange-500/5 blur-[80px] rounded-full"></div>
           
-          <div className="relative bg-white/90 backdrop-blur-xl p-12 rounded-[4rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.06)] border border-white">
-            <div className="flex items-center gap-5 mb-12">
-              <div className="w-16 h-16 bg-[#10B981] rounded-[1.5rem] flex items-center justify-center text-white text-3xl shadow-lg shadow-emerald-500/20">
+          <div className="relative bg-white/80 backdrop-blur-2xl p-12 rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.06)] border border-white/60">
+            <div className="flex items-center gap-5 mb-14">
+              <div className="w-16 h-16 bg-[#10B981] rounded-[1.2rem] flex items-center justify-center text-white text-3xl shadow-lg shadow-emerald-500/20">
                 <FaTree />
               </div>
               <div>
@@ -119,11 +133,11 @@ export default function StudentDashboard() {
                 <p className="text-[10px] font-black uppercase text-gray-300 tracking-[0.2em] mb-3">Total XP Earned</p>
               </div>
               
-              <div className="relative h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
+              <div className="relative h-2.5 w-full bg-gray-100/50 rounded-full overflow-hidden">
                 <motion.div 
                   initial={{ width: 0 }} 
                   animate={{ width: "65%" }} 
-                  transition={{ duration: 1.5, ease: "easeOut" }}
+                  transition={{ duration: 2, ease: "circOut" }}
                   className="h-full bg-[#10B981] rounded-full" 
                 />
               </div>
@@ -134,15 +148,11 @@ export default function StudentDashboard() {
             </div>
           </div>
         </motion.div>
-
       </section>
 
-      {/* Subtle bottom sparkles to match your image */}
-      <div className="fixed bottom-10 left-0 right-0 pointer-events-none flex justify-around opacity-30">
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="w-1 h-1 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: `${i * 0.5}s` }}></div>
-        ))}
-      </div>
+      {/* Decorative background elements */}
+      <div className="fixed -bottom-20 -left-20 w-96 h-96 bg-orange-100/30 blur-[120px] rounded-full -z-10"></div>
+      <div className="fixed top-1/2 right-0 w-64 h-64 bg-pink-100/20 blur-[100px] rounded-full -z-10"></div>
     </main>
   );
 }

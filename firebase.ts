@@ -1,7 +1,7 @@
-// firebase.ts
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage"; // Needed for ID uploads
 
 const firebaseConfig = {
   apiKey: "AIzaSyC3YHYBcJD531Qk0tMQtFYi9ijjykBCcrU",
@@ -13,8 +13,14 @@ const firebaseConfig = {
   measurementId: "G-EF1XH837H0",
 };
 
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase (Check if already initialized to prevent errors)
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+// Initialize & Export Services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app); // Added this for your forms
+
+// Initialize & Export Providers
 export const googleProvider = new GoogleAuthProvider();
-export const githubProvider = new GithubAuthProvider(); // ✅ Added GitHub
+export const githubProvider = new GithubAuthProvider();
